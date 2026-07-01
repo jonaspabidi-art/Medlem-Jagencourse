@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { createInviteLink } from '@/lib/invite';
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -37,12 +38,10 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ ok: true, alreadyDecided: true });
   }
 
-  const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(application.email, {
-    data: { full_name: application.name },
-  });
+  const { link, error: inviteError } = await createInviteLink(admin, application.email, application.name);
 
-  if (inviteError) {
-    return NextResponse.json({ error: inviteError.message }, { status: 500 });
+  if (inviteError || !link) {
+    return NextResponse.json({ error: inviteError }, { status: 500 });
   }
 
   // profiles row is created by the on_auth_user_created trigger (0001_init.sql).
@@ -60,5 +59,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, link });
 }

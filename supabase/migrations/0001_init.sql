@@ -2,8 +2,11 @@
 -- Kör i Supabase Studio SQL Editor (eller via Supabase CLI).
 
 -- ============================================================
--- APPLICATIONS: publika ansökningar från landningssidans formulär
+-- TABELLER (skapas allihop innan RLS-policyer, eftersom flera
+-- policyer nedan refererar mellan tabellerna i subqueries — Postgres
+-- validerar tabellreferenser direkt vid CREATE POLICY).
 -- ============================================================
+
 create table applications (
   id            uuid primary key default gen_random_uuid(),
   created_at    timestamptz not null default now(),
@@ -17,9 +20,45 @@ create table applications (
   approved_by   uuid references auth.users(id)
 );
 
+create table profiles (
+  id          uuid primary key references auth.users(id) on delete cascade,
+  email       text not null,
+  full_name   text,
+  is_admin    boolean not null default false,
+  created_at  timestamptz not null default now()
+);
+
+create table modules (
+  id          uuid primary key default gen_random_uuid(),
+  title       text not null,
+  description text,
+  sort_order  int not null default 0,
+  created_at  timestamptz not null default now()
+);
+
+create table lessons (
+  id           uuid primary key default gen_random_uuid(),
+  module_id    uuid not null references modules(id) on delete cascade,
+  title        text not null,
+  description  text,
+  video_path   text not null,
+  duration_sec int,
+  sort_order   int not null default 0,
+  created_at   timestamptz not null default now()
+);
+
+create table lesson_progress (
+  user_id      uuid not null references auth.users(id) on delete cascade,
+  lesson_id    uuid not null references lessons(id) on delete cascade,
+  completed_at timestamptz not null default now(),
+  primary key (user_id, lesson_id)
+);
+
+-- ============================================================
+-- RLS: applications — publikt lead-formulär, insert-only för anon.
+-- ============================================================
 alter table applications enable row level security;
 
--- Publikt lead-formulär: vem som helst kan skapa en ansökan, ingen kan läsa dem.
 create policy "anon and authenticated can insert applications"
   on applications for insert
   to anon, authenticated
@@ -40,16 +79,8 @@ create policy "admins can update applications"
   );
 
 -- ============================================================
--- PROFILES: 1:1 med auth.users, håller admin-flaggan
+-- RLS: profiles — 1:1 med auth.users, håller admin-flaggan.
 -- ============================================================
-create table profiles (
-  id          uuid primary key references auth.users(id) on delete cascade,
-  email       text not null,
-  full_name   text,
-  is_admin    boolean not null default false,
-  created_at  timestamptz not null default now()
-);
-
 alter table profiles enable row level security;
 
 create policy "users can select own profile"
@@ -69,33 +100,14 @@ create policy "admins can select all profiles"
 -- av client-side-uppdatering av is_admin (mass-assignment-footgun).
 
 -- ============================================================
--- MODULES / LESSONS: kursinnehåll, öppet för alla inloggade
+-- RLS: modules / lessons — öppet innehåll för alla inloggade.
 -- ============================================================
-create table modules (
-  id          uuid primary key default gen_random_uuid(),
-  title       text not null,
-  description text,
-  sort_order  int not null default 0,
-  created_at  timestamptz not null default now()
-);
-
 alter table modules enable row level security;
 
 create policy "authenticated can select modules"
   on modules for select
   to authenticated
   using (true);
-
-create table lessons (
-  id           uuid primary key default gen_random_uuid(),
-  module_id    uuid not null references modules(id) on delete cascade,
-  title        text not null,
-  description  text,
-  video_path   text not null,
-  duration_sec int,
-  sort_order   int not null default 0,
-  created_at   timestamptz not null default now()
-);
 
 alter table lessons enable row level security;
 
@@ -108,15 +120,8 @@ create policy "authenticated can select lessons"
 -- service-role / Supabase Studio i v1.
 
 -- ============================================================
--- LESSON_PROGRESS: bockar + progress-ringar per elev
+-- RLS: lesson_progress — bockar + progress-ringar per elev.
 -- ============================================================
-create table lesson_progress (
-  user_id      uuid not null references auth.users(id) on delete cascade,
-  lesson_id    uuid not null references lessons(id) on delete cascade,
-  completed_at timestamptz not null default now(),
-  primary key (user_id, lesson_id)
-);
-
 alter table lesson_progress enable row level security;
 
 create policy "users can select own progress"

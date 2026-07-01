@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { CopyableLink } from './CopyableLink';
 
 export function ApproveButton({ applicationId }: { applicationId: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [link, setLink] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleApprove() {
@@ -16,14 +18,30 @@ export function ApproveButton({ applicationId }: { applicationId: string }) {
       method: 'POST',
     });
 
+    const body = await res.json().catch(() => ({}));
+
     if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
       setError(body.error ?? 'Något gick fel.');
       setLoading(false);
       return;
     }
 
-    router.refresh();
+    // Hold off refreshing (which would move this application out of the
+    // pending list and unmount this component) until the admin has copied
+    // the link — otherwise it flashes away before they can grab it.
+    setLink(body.link ?? null);
+    setLoading(false);
+  }
+
+  if (link) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, minWidth: 260 }}>
+        <CopyableLink link={link} />
+        <button onClick={() => router.refresh()} className="btn-secondary" style={{ padding: '6px 14px', fontSize: 12 }}>
+          Klart
+        </button>
+      </div>
+    );
   }
 
   return (

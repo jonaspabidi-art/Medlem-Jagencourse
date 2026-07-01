@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { TopNav } from '@/components/TopNav';
 import { ApproveButton } from '@/components/ApproveButton';
+import { InviteForm } from '@/components/InviteForm';
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -30,6 +31,8 @@ export default async function AdminPage() {
       <main className="container" style={{ maxWidth: 880, padding: '48px 24px 80px' }}>
         <div className="kicker" style={{ marginBottom: 12 }}>Admin</div>
         <h1 className="h1" style={{ fontSize: 34, margin: '0 0 32px' }}>Ansökningar</h1>
+
+        <InviteForm />
 
         <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 18, marginBottom: 14 }}>
           Väntar på godkännande ({pending.length})
