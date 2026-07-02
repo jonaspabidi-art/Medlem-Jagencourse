@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { TopNav } from '@/components/TopNav';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { MarkCompleteButton } from '@/components/MarkCompleteButton';
+import { AdminVideoUpload } from '@/components/AdminVideoUpload';
 import type { ModuleWithLessons } from '@/lib/types';
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
@@ -61,6 +62,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           <h1 className="h1" style={{ fontSize: 28, margin: '0 0 20px' }}>{lesson.title}</h1>
 
           <VideoPlayer key={lesson.id} lessonId={lesson.id} />
+          {profile?.is_admin && <AdminVideoUpload key={lesson.id} lessonId={lesson.id} />}
 
           {lesson.description && (
             <p style={{ fontSize: 15, color: 'var(--text-2)', lineHeight: 1.6, marginTop: 22 }}>

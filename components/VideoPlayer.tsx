@@ -16,7 +16,7 @@ export function VideoPlayer({ lessonId }: { lessonId: string }) {
         if (!cancelled) setSrc(data.url);
       })
       .catch(() => {
-        if (!cancelled) setError('Kunde inte ladda videon. Prova att ladda om sidan.');
+        if (!cancelled) setError('Kunde inte hämta videolänken. Prova att ladda om sidan.');
       });
 
     return () => {
@@ -37,9 +37,18 @@ export function VideoPlayer({ lessonId }: { lessonId: string }) {
         justifyContent: 'center',
       }}
     >
-      {error && <p style={{ color: 'var(--text-3)', fontSize: 14 }}>{error}</p>}
+      {error && (
+        <p style={{ color: 'var(--text-2)', fontSize: 14, padding: '0 24px', textAlign: 'center' }}>{error}</p>
+      )}
       {!error && !src && <p style={{ color: 'var(--text-3)', fontSize: 14 }}>Laddar video…</p>}
-      {src && <video src={src} controls style={{ width: '100%', height: '100%' }} />}
+      {src && (
+        <video
+          src={src}
+          controls
+          style={{ width: '100%', height: '100%' }}
+          onError={() => setError('Den här lektionen har ingen video uppladdad än.')}
+        />
+      )}
     </div>
   );
 }
