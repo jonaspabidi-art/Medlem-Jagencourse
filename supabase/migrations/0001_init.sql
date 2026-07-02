@@ -88,12 +88,12 @@ create policy "users can select own profile"
   to authenticated
   using (auth.uid() = id);
 
-create policy "admins can select all profiles"
-  on profiles for select
-  to authenticated
-  using (
-    exists (select 1 from profiles p where p.id = auth.uid() and p.is_admin)
-  );
+-- OBS: ingen "admins kan se alla profiler"-policy — en sådan policy som
+-- refererar profiles-tabellen i sitt eget USING-villkor orsakar oändlig
+-- rekursion i Postgres RLS (fel 42P17). Inget i appen behöver idag lista
+-- andra användares profiler, så policyn är avsiktligt utelämnad. Om det
+-- behövs senare: använd en SECURITY DEFINER-funktion som kringgår RLS
+-- istället för en direkt self-referencing policy.
 
 -- Ingen insert/update-policy för authenticated: profilraden hanteras uteslutande
 -- av triggern nedan (skapande) och service-role (godkännande). Detta stänger
