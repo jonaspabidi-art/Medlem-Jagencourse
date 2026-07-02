@@ -24,7 +24,7 @@ export default async function SetPasswordPage() {
         padding: '24px',
       }}
     >
-      <Image src="/logo.png" alt="JAgencourse" width={40} height={40} style={{ borderRadius: 8, marginBottom: 28 }} />
+      <Image src="/logo.png" alt="JAgencourse" width={150} height={32} style={{ height: 32, width: 'auto', marginBottom: 28 }} />
       <div className="card" style={{ width: '100%', maxWidth: 400, padding: '34px' }}>
         <h1 className="h1" style={{ fontSize: 26, margin: '0 0 6px' }}>Välkommen!</h1>
         <p style={{ fontSize: 15, color: 'var(--text-2)', margin: '0 0 26px' }}>

@@ -23,11 +23,8 @@ export function TopNav({ isAdmin }: { isAdmin: boolean }) {
           justifyContent: 'space-between',
         }}
       >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Image src="/logo.png" alt="JAgencourse" width={28} height={28} style={{ borderRadius: 6 }} />
-          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: 15 }}>
-            JAgencourse
-          </span>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <Image src="/logo.png" alt="JAgencourse" width={112} height={24} style={{ height: 24, width: 'auto' }} />
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {isAdmin && (
