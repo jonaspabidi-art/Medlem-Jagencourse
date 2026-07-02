@@ -44,7 +44,7 @@ export default async function AdminPage() {
           {pending.map((app) => (
             <div
               key={app.id}
-              className="card"
+              className="card admin-card-row"
               style={{ padding: 20, display: 'flex', justifyContent: 'space-between', gap: 20, alignItems: 'center' }}
             >
               <div>
@@ -75,6 +75,8 @@ export default async function AdminPage() {
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: 6,
                     padding: '12px 16px',
                     border: '1px solid var(--border)',
                     borderRadius: 8,

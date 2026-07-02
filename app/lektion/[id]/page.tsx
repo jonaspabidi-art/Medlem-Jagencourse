@@ -45,7 +45,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       <TopNav isAdmin={!!profile?.is_admin} />
 
       <main
-        className="container"
+        className="container lesson-layout"
         style={{
           maxWidth: 1080,
           padding: '40px 24px 80px',
@@ -84,7 +84,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           </div>
         </div>
 
-        <aside className="card" style={{ padding: 20, position: 'sticky', top: 84 }}>
+        <aside className="card lesson-sidebar" style={{ padding: 20, position: 'sticky', top: 84 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-3)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
             {currentModule.title}
           </div>

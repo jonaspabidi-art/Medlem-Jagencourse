@@ -45,6 +45,7 @@ export default async function DashboardPage() {
         </p>
 
         <div
+          className="module-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',

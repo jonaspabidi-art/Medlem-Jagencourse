@@ -42,7 +42,7 @@ export default function LoginPage() {
       }}
     >
       <Image src="/logo.png" alt="JAgencourse" width={150} height={32} style={{ height: 32, width: 'auto', marginBottom: 28 }} />
-      <div className="card" style={{ width: '100%', maxWidth: 400, padding: '34px' }}>
+      <div className="card auth-card" style={{ width: '100%', maxWidth: 400, padding: '34px' }}>
         <h1 className="h1" style={{ fontSize: 26, margin: '0 0 6px' }}>Logga in</h1>
         <p style={{ fontSize: 15, color: 'var(--text-2)', margin: '0 0 26px' }}>
           Medlemsområdet för JAgencourse-elever.

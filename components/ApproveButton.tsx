@@ -35,7 +35,7 @@ export function ApproveButton({ applicationId }: { applicationId: string }) {
 
   if (link) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, minWidth: 260 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, width: '100%', maxWidth: 320 }}>
         <CopyableLink link={link} />
         <button onClick={() => router.refresh()} className="btn-secondary" style={{ padding: '6px 14px', fontSize: 12 }}>
           Klart

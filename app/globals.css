@@ -116,3 +116,41 @@ button {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.18);
 }
+
+/* ===== Responsive ===== */
+
+@media (max-width: 900px) {
+  .lesson-layout {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .lesson-sidebar {
+    position: static !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .module-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .auth-card {
+    padding: 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .h1 {
+    font-size: 26px !important;
+  }
+  .admin-card-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .admin-card-row > * {
+    width: 100%;
+  }
+}
